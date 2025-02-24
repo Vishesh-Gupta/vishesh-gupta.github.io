@@ -1,92 +1,70 @@
-import { FC } from 'react'
+import { FC, useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import About from './components/About'
+import Contact from './components/Contact'
+import Photography from './components/Photography'
+import RotatingGreeting from './components/RotatingGreeting'
+import ThemeToggle from './components/ThemeToggle'
 import './App.css'
+
+const formatDate = (date: Date) => {
+  return date.toLocaleString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }).replace(',', '');
+};
+
+const Home: FC = () => {
+  const [currentTime, setCurrentTime] = useState(formatDate(new Date()));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(formatDate(new Date()));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <main className="main-content">
+      <RotatingGreeting />
+      <p className="timestamp">{currentTime}</p>
+      
+      <p className="bio">
+        Hi, I'm Vishesh. I'm a software engineer based currently a Digital Nomad, 
+        Currently fun employed @Home. Previously{' '}
+        <a href="https://monoceros.com" target="_blank" rel="noopener noreferrer">@Monoceros</a>,{' '}
+        <a href="https://clearstreet.io" target="_blank" rel="noopener noreferrer">@ClearStreet</a>.{' '}
+        Alumni from University of Waterloo with a degree in Computer Science and minor in East Asian Studies.
+      </p>
+
+      <nav className="nav-links">
+        <Link to="/about">about</Link>
+        <Link to="/contact">contact</Link>
+        <Link to="/photography">photography</Link>
+      </nav>
+    </main>
+  )
+}
 
 const App: FC = () => {
   return (
-    <div className="app">
-      <div className="center-container">
-        <main className="main-content" >
-          <div>
-            <img 
-              src="https://picsum.photos/150/150"
-              alt="Random placeholder image" 
-              className="profile-image"
-              style={{
-                borderRadius: '50%',
-                width: '150px',
-                height: '150px',
-                objectFit: 'cover',
-                margin: '0 auto',
-                display: 'block',
-                border: '3px solid #eee',
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)'
-              }}
-            />
-          </div>
-          <div className="content" style={{ padding: '0 2rem' }}>
-            <p style={{  
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: 'italic',
-              fontSize: '1.2rem',
-              color: '#555',
-              letterSpacing: '0.5px'
-            }}>
-              Welcome to my personal website
-            </p>
-            <p style={{  
-              lineHeight: '1.8', 
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: 'italic',
-              fontSize: '1.1rem',
-              color: '#666',
-              letterSpacing: '0.5px'
-            }}>
-              I am a passionate software engineer who loves building unique financial solutions. 
-              I've had the privilege of working at <a href="https://monoceros.com" style={{ color: '#000', textDecoration: 'none' }}>Monoceros</a> and{' '}
-              <a href="https://clearstreet.io" style={{ color: '#000', textDecoration: 'none' }}>ClearStreet</a>, where I've contributed to innovative projects.
-            </p>
-          </div>
-        </main>
-        <div style={{ 
-          display: 'flex',
-          justifyContent: 'center'
-        }}>
-          <button style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '4px',
-            background: 'transparent',
-            cursor: 'pointer'
-          }}>
-            Portfolio
-          </button>
-          <button style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '4px',
-            background: 'transparent',
-            cursor: 'pointer'
-          }}>
-            Resume
-          </button>
-          <button style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '4px',
-            background: 'transparent',
-            cursor: 'pointer'
-          }}>
-            Contact
-          </button>
-        </div>
+    <Router>
+      <div className="app">
+        <ThemeToggle />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/photography" element={<Photography />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   )
 }
 

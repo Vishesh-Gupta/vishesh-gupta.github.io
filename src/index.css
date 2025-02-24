@@ -1,16 +1,92 @@
+/* Import fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,400;0,6..72,500;1,6..72,200;1,6..72,400&family=Inter:wght@300;400;500&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+:root {
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Theme variables */
+  --bg-color: #ffffff;
+  --text-color: #333;
+  --link-color: #333;
+  --hover-color: #000;
+  --bg-rgb: 255, 255, 255; /* Added for rgba calculations */
+}
+
+/* Dark mode styles */
+:root.dark-mode {
+  --bg-color: #000000;
+  --text-color: #eee;
+  --link-color: #ddd;
+  --hover-color: #fff;
+  --bg-rgb: 0, 0, 0; /* Added for rgba calculations */
 }
 
 body {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-serif);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: white;
-  color: #333;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   line-height: 1.5;
+  font-size: 15.4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 2.063rem;
+  letter-spacing: -0.02em;
+}
+
+.bio {
+  font-family: var(--font-serif);
+  font-size: 0.963rem;
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  color: var(--text-color);
+}
+
+.timestamp {
+  font-family: var(--font-sans);
+  font-size: 0.825rem;
+  letter-spacing: 0.02em;
+  color: var(--text-color);
+}
+
+.nav-links a {
+  font-family: var(--font-serif);
+  font-size: 0.963rem;
+  letter-spacing: 0.01em;
+  color: var(--link-color);
+}
+
+.nav-links a:hover {
+  color: var(--hover-color);
+}
+
+.bio a {
+  color: var(--link-color);
+}
+
+.bio a:hover {
+  color: var(--hover-color);
+}
+
+/* Update greeting title style */
+.greeting-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 2.475rem;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
 }
 
 /* Remove the dark mode styles */
@@ -21,4 +97,9 @@ body {
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+.app {
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease;
 }
