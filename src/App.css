@@ -117,16 +117,15 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Route view — height is reserved so pages swap in place.
+   Bio.
    --------------------------------------------------------------------------- */
 
-.view {
-  /* Enough room for the tallest route, so the nav below never moves. */
-  min-height: 17.5rem;
-  animation: view-in 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+.bio-block {
+  animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: 120ms;
 }
 
-@keyframes view-in {
+@keyframes rise {
   from {
     opacity: 0;
     transform: translate3d(0, 8px, 0);
@@ -159,97 +158,52 @@
   text-wrap: pretty;
 }
 
-/* ---------------------------------------------------------------------------
-   Link lists — work / elsewhere.
-   --------------------------------------------------------------------------- */
-
-.link-list li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid var(--ink-faint);
-  animation: row-in 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.link-list li:first-child {
-  border-top: 1px solid var(--ink-faint);
-}
-
-@keyframes row-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 6px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.link-list a {
+/* Company links sit inside prose, so they carry a standing underline that
+   firms up on hover rather than appearing from nothing. */
+.company {
   position: relative;
-  font-size: 1.0625rem;
+  white-space: nowrap;
+  box-shadow: inset 0 -1px 0 var(--ink-faint);
+  transition: box-shadow 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.link-note {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
-  color: var(--ink-soft);
-  text-align: right;
+.company:hover,
+.company:focus-visible {
+  box-shadow: inset 0 -1px 0 var(--ink);
 }
 
 /* ---------------------------------------------------------------------------
-   Nav.
+   Elsewhere — icon row.
    --------------------------------------------------------------------------- */
 
-.nav {
+.icons {
   display: flex;
   gap: 1.5rem;
-  margin-top: 2.5rem;
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  letter-spacing: 0.02em;
+  margin-top: 2.75rem;
 }
 
-.nav a {
-  position: relative;
+.icon-link {
+  display: inline-flex;
   color: var(--ink-soft);
-  transition: color 300ms ease;
+  /* Grows the tap target to ~40px without changing how the row looks. */
+  padding: 0.625rem;
+  margin: -0.625rem;
+  animation: rise 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transition:
+    color 280ms ease,
+    transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.nav a:hover,
-.nav a.active {
+.icon-link:hover,
+.icon-link:focus-visible {
   color: var(--ink);
-}
-
-/* Shared underline sweep. */
-.nav a::after,
-.link-list a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.nav a:hover::after,
-.nav a.active::after,
-.link-list a:hover::after,
-.link-list a:focus-visible::after {
-  transform: scaleX(1);
+  transform: translate3d(0, -2px, 0);
 }
 
 :focus-visible {
   outline: 1px solid var(--ink);
   outline-offset: 4px;
+  border-radius: 2px;
 }
 
 @media (max-width: 480px) {
@@ -258,17 +212,8 @@
     align-items: flex-start;
   }
 
-  .view {
-    min-height: 24rem;
-  }
-
-  .link-list li {
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-
-  .link-note {
-    text-align: left;
+  .greeting {
+    margin-bottom: 2rem;
   }
 }
 
@@ -277,13 +222,21 @@
   .greeting-char.is-leaving,
   .greeting-language span,
   .greeting-language span.is-leaving,
-  .view,
-  .link-list li {
+  .bio-block,
+  .icon-link {
     animation: none !important;
   }
 
-  .nav a::after,
-  .link-list a::after {
+  .icon-link {
+    transition-duration: 1ms;
+  }
+
+  .icon-link:hover,
+  .icon-link:focus-visible {
+    transform: none;
+  }
+
+  .company {
     transition-duration: 1ms;
   }
 }
