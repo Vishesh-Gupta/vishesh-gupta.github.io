@@ -9,7 +9,18 @@
 
   --measure: 33rem;
 
-  color-scheme: light;
+  color-scheme: light dark;
+}
+
+/* Follows the OS setting; there is no manual toggle. The inked colours are a
+   touch off pure white so the large serif doesn't halate against the black. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --ink: #f4f1ed;
+    --ink-soft: #8d8880;
+    --ink-faint: #322e2a;
+  }
 }
 
 *,
@@ -45,6 +56,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  transition:
+    background-color 400ms ease,
+    color 400ms ease;
 }
 
 a {

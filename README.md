@@ -17,6 +17,14 @@ bio with the companies linked inline, and a row of icon links.
 To wire up the résumé link, drop a PDF at `public/resume.pdf` (or point
 `RESUME_URL` at a hosted copy).
 
+## Theming
+
+Light and dark follow the OS setting via `prefers-color-scheme` — there's no
+toggle. Both schemes are defined as custom properties at the top of
+`src/index.css`; nothing else in the CSS hardcodes a colour, so changing the
+palette means editing those two blocks. The favicon and the `theme-color`
+meta tags switch with the scheme too.
+
 ## Layout stability
 
 The greeting line has a reserved height sized for the tallest script in the
