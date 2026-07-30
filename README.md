@@ -19,7 +19,12 @@ To wire up the résumé link, drop a PDF at `public/resume.pdf` (or point
 
 ## The photo
 
-Drop it at `public/portrait.jpg`. It renders 136px wide in a 4:5 crop, so
+**`public/portrait.jpg` is currently a placeholder** — a stock landscape from
+Unsplash, not a photo of Vishesh. Overwrite that file with a real one and
+update `PORTRAIT.alt` in `src/site.ts` to describe it. The Unsplash License
+allows use without attribution, so nothing else needs to change on the swap.
+
+It renders 136px wide in a 4:5 crop, so
 roughly **544×680** covers a 2x screen; anything larger is wasted bytes.
 `object-fit: cover` handles the crop, so the source doesn't have to be 4:5
 already — but it centres the crop, so centre the subject.
