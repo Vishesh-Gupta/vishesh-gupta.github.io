@@ -6,6 +6,14 @@ export const ROLE = 'Software Engineer'
 // Drop a PDF at public/resume.pdf, or point this at a hosted copy.
 export const RESUME_URL = '/resume.pdf'
 
+// Drop the photo at public/portrait.jpg. It's cropped to 4:5 and rendered at
+// 136px wide, so roughly 544x680 covers a 2x screen. If the file is missing the
+// portrait column removes itself rather than showing a broken image.
+export const PORTRAIT = {
+  src: '/portrait.jpg',
+  alt: NAME,
+}
+
 // Linked inline from the bio.
 export const COMPANIES: Record<string, string> = {
   Alpaca: 'https://alpaca.markets',

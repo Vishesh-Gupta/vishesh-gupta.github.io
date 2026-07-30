@@ -17,6 +17,17 @@ bio with the companies linked inline, and a row of icon links.
 To wire up the résumé link, drop a PDF at `public/resume.pdf` (or point
 `RESUME_URL` at a hosted copy).
 
+## The photo
+
+Drop it at `public/portrait.jpg`. It renders 136px wide in a 4:5 crop, so
+roughly **544×680** covers a 2x screen; anything larger is wasted bytes.
+`object-fit: cover` handles the crop, so the source doesn't have to be 4:5
+already — but it centres the crop, so centre the subject.
+
+It sits desaturated and fades to full colour on hover. If the file isn't
+there, the portrait column removes itself and the page falls back to the
+single-column layout rather than showing a broken image.
+
 ## Theming
 
 Light and dark follow the OS setting via `prefers-color-scheme` — there's no

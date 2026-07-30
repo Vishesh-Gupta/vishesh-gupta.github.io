@@ -117,6 +117,50 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Body — portrait column beside the prose.
+   --------------------------------------------------------------------------- */
+
+.body-grid {
+  display: grid;
+  grid-template-columns: var(--portrait) 1fr;
+  column-gap: 2.25rem;
+  align-items: start;
+}
+
+/* No photo file: collapse to the single column the page had before. */
+.body-grid.is-text-only {
+  grid-template-columns: 1fr;
+}
+
+.prose {
+  max-width: 30rem;
+}
+
+.portrait {
+  margin: 0;
+  animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: 80ms;
+}
+
+.portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Fixed ratio and an intrinsic size on the tag, so the text beside it never
+     reflows when the photo decodes. */
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: var(--ink-faint);
+  filter: grayscale(1);
+  transition: filter 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.portrait img:hover {
+  filter: grayscale(0);
+}
+
+/* ---------------------------------------------------------------------------
    Bio.
    --------------------------------------------------------------------------- */
 
@@ -206,6 +250,17 @@
   border-radius: 2px;
 }
 
+@media (max-width: 640px) {
+  .body-grid {
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+  }
+
+  .portrait {
+    width: var(--portrait);
+  }
+}
+
 @media (max-width: 480px) {
   .page {
     padding: 3rem 1.25rem;
@@ -223,8 +278,13 @@
   .greeting-language span,
   .greeting-language span.is-leaving,
   .bio-block,
+  .portrait,
   .icon-link {
     animation: none !important;
+  }
+
+  .portrait img {
+    transition-duration: 1ms;
   }
 
   .icon-link {
