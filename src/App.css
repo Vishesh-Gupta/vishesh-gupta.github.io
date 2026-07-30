@@ -1,78 +1,289 @@
-.app {
-  background-color: white;
+/* ---------------------------------------------------------------------------
+   Layout — one fixed column on every route, so navigation never moves things.
+   --------------------------------------------------------------------------- */
+
+.page {
   min-height: 100vh;
-  padding: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4rem 1.5rem;
 }
 
-.main-content {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: left;
-  padding: 0 1rem;
+@supports (min-height: 100svh) {
+  .page {
+    min-height: 100svh;
+  }
 }
 
-.chinese-title {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
+.column {
+  width: 100%;
+  max-width: var(--measure);
 }
 
-.timestamp {
-  font-family: monospace;
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
+/* ---------------------------------------------------------------------------
+   Greeting — persistent across routes, fixed height, animated per character.
+   --------------------------------------------------------------------------- */
+
+.greeting {
+  margin-bottom: 2.5rem;
 }
 
-.bio {
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  max-width: 540px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.nav-links a {
-  color: #000;
-  text-decoration: none;
-}
-
-.nav-links a:hover {
-  text-decoration: underline;
-}
-
-.greeting-title {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  min-height: 4rem;
+.greeting-word {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 9vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  /* Reserved so swapping languages never nudges the page. Tall enough for
+     Devanagari, Japanese and Arabic glyphs, which sit outside a Latin line box. */
+  height: 1.3em;
   display: flex;
   align-items: center;
 }
 
-.cursor {
+.greeting-char {
   display: inline-block;
-  width: 3px;
-  height: 3rem;
-  background-color: #000;
-  margin-left: 5px;
-  animation: blink 1s infinite;
+  white-space: pre;
+  animation: char-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+.greeting-char.is-leaving {
+  animation: char-out 460ms cubic-bezier(0.55, 0, 0.75, 0) both;
 }
 
-.bio a {
-  color: #333;
-  text-decoration: none;
+@keyframes char-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.42em, 0);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
 }
 
-.bio a:hover {
-  text-decoration: underline;
+@keyframes char-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -0.34em, 0);
+    filter: blur(8px);
+  }
+}
+
+.greeting-language {
+  height: 1.6em;
+  margin-top: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.greeting-language span {
+  display: inline-block;
+  animation: label-in 900ms ease both;
+}
+
+.greeting-language span.is-leaving {
+  animation: label-out 420ms ease both;
+}
+
+@keyframes label-in {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes label-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Route view — height is reserved so pages swap in place.
+   --------------------------------------------------------------------------- */
+
+.view {
+  /* Enough room for the tallest route, so the nav below never moves. */
+  min-height: 17.5rem;
+  animation: view-in 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 1.1rem;
+}
+
+.eyebrow .dot {
+  margin: 0 0.35em;
+  color: var(--ink-faint);
+}
+
+.bio {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  letter-spacing: -0.006em;
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------------------
+   Link lists — work / elsewhere.
+   --------------------------------------------------------------------------- */
+
+.link-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--ink-faint);
+  animation: row-in 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.link-list li:first-child {
+  border-top: 1px solid var(--ink-faint);
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.link-list a {
+  position: relative;
+  font-size: 1.0625rem;
+}
+
+.link-note {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------------------
+   Nav.
+   --------------------------------------------------------------------------- */
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+
+.nav a {
+  position: relative;
+  color: var(--ink-soft);
+  transition: color 300ms ease;
+}
+
+.nav a:hover,
+.nav a.active {
+  color: var(--ink);
+}
+
+/* Shared underline sweep. */
+.nav a::after,
+.link-list a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.nav a:hover::after,
+.nav a.active::after,
+.link-list a:hover::after,
+.link-list a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 3rem 1.25rem;
+    align-items: flex-start;
+  }
+
+  .view {
+    min-height: 24rem;
+  }
+
+  .link-list li {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .link-note {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .greeting-char,
+  .greeting-char.is-leaving,
+  .greeting-language span,
+  .greeting-language span.is-leaving,
+  .view,
+  .link-list li {
+    animation: none !important;
+  }
+
+  .nav a::after,
+  .link-list a::after {
+    transition-duration: 1ms;
+  }
 }

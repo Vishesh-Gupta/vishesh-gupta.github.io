@@ -1,71 +1,59 @@
-import { FC, useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import About from './components/About'
-import Contact from './components/Contact'
-import Photography from './components/Photography'
-import RotatingGreeting from './components/RotatingGreeting'
-import ThemeToggle from './components/ThemeToggle'
+import { FC } from 'react'
+import {
+  BrowserRouter as Router,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom'
+import Greeting from './components/Greeting'
+import Index from './components/Index'
+import LinkList from './components/LinkList'
+import { ELSEWHERE, WORK } from './site'
 import './App.css'
 
-const formatDate = (date: Date) => {
-  return date.toLocaleString('en-US', {
-    month: '2-digit',
-    day: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  }).replace(',', '');
-};
+const nav = [
+  { to: '/', label: 'index' },
+  { to: '/work', label: 'work' },
+  { to: '/elsewhere', label: 'elsewhere' },
+]
 
-const Home: FC = () => {
-  const [currentTime, setCurrentTime] = useState(formatDate(new Date()));
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(formatDate(new Date()));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+const Shell: FC = () => {
+  const location = useLocation()
 
   return (
-    <main className="main-content">
-      <RotatingGreeting />
-      <p className="timestamp">{currentTime}</p>
-      
-      <p className="bio">
-        Hi, I'm Vishesh. I'm a software engineer based currently a Digital Nomad, 
-        Currently fun employed @Home. Previously{' '}
-        <a href="https://monoceros.com" target="_blank" rel="noopener noreferrer">@Monoceros</a>,{' '}
-        <a href="https://clearstreet.io" target="_blank" rel="noopener noreferrer">@ClearStreet</a>.{' '}
-        Alumni from University of Waterloo with a degree in Computer Science and minor in East Asian Studies.
-      </p>
+    <main className="page">
+      <div className="column">
+        <Greeting />
 
-      <nav className="nav-links">
-        <Link to="/about">about</Link>
-        <Link to="/contact">contact</Link>
-        <Link to="/photography">photography</Link>
-      </nav>
+        <div className="view" key={location.pathname}>
+          <Routes location={location}>
+            <Route path="/" element={<Index />} />
+            <Route path="/work" element={<LinkList label="Work" items={WORK} />} />
+            <Route
+              path="/elsewhere"
+              element={<LinkList label="Elsewhere" items={ELSEWHERE} />}
+            />
+            <Route path="*" element={<Index />} />
+          </Routes>
+        </div>
+
+        <nav className="nav">
+          {nav.map((item) => (
+            <NavLink key={item.to} to={item.to} end={item.to === '/'}>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
     </main>
   )
 }
 
-const App: FC = () => {
-  return (
-    <Router>
-      <div className="app">
-        <ThemeToggle />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/photography" element={<Photography />} />
-        </Routes>
-      </div>
-    </Router>
-  )
-}
+const App: FC = () => (
+  <Router>
+    <Shell />
+  </Router>
+)
 
 export default App

@@ -1,50 +1,32 @@
-# React + TypeScript + Vite
+# vishesh-gupta.github.io
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal site. White background, one column, three routes, and a greeting that
+cycles through languages.
 
-Currently, two official plugins are available:
+## Editing content
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Everything you'd normally want to change — bio, work links, elsewhere links,
+résumé URL — lives in [`src/site.ts`](src/site.ts). The list of greetings lives
+at the top of [`src/components/Greeting.tsx`](src/components/Greeting.tsx).
 
-## Expanding the ESLint configuration
+To wire up the résumé link, drop a PDF at `public/resume.pdf` (or point
+`RESUME_URL` at a hosted copy).
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Layout stability
 
-- Configure the top-level `parserOptions` property like this:
+The greeting sits above the router outlet and has a reserved height, and
+`.view` has a reserved `min-height`, so switching routes doesn't move the
+greeting or the nav. If you add a page taller than the current reserve, bump
+`.view`'s `min-height` in `src/App.css` to match.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Local development
+
+```bash
+pnpm install
+pnpm dev      # dev server
+pnpm build    # typecheck + production build to dist/
+pnpm lint
+pnpm preview  # serve the production build
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Deploys to GitHub Pages via `.github/workflows/deploy.yml` on push to `main`.
