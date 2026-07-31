@@ -212,8 +212,69 @@
 }
 
 .company:hover,
-.company:focus-visible {
+.company:focus-visible,
+.company.is-active {
   box-shadow: inset 0 -1px 0 var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Per-company notes.
+   --------------------------------------------------------------------------- */
+
+.company-note,
+.company-notes {
+  margin-top: 1.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.775rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+}
+
+.company-note-label {
+  display: inline-block;
+  margin-right: 0.7em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Default: every note listed. Pointer devices trade this for the hover slot
+   below, so a device without hover never hides the content behind it. */
+.company-note {
+  display: none;
+}
+
+.company-notes li + li {
+  margin-top: 0.5rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .company-note {
+    display: block;
+    /* Exactly two lines held open (2 x 1.6 line-height), so swapping between
+       companies of different note lengths doesn't move the icons below. Keep
+       notes within two lines or raise this. */
+    min-height: 3.2em;
+  }
+
+  .company-notes {
+    display: none;
+  }
+}
+
+.company-note span {
+  animation: note-in 420ms ease both;
+}
+
+@keyframes note-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -223,7 +284,7 @@
 .icons {
   display: flex;
   gap: 1.5rem;
-  margin-top: 2.75rem;
+  margin-top: 2.25rem;
 }
 
 .icon-link {
@@ -279,7 +340,8 @@
   .greeting-language span.is-leaving,
   .bio-block,
   .portrait,
-  .icon-link {
+  .icon-link,
+  .company-note span {
     animation: none !important;
   }
 

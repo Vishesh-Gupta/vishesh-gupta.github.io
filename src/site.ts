@@ -21,12 +21,35 @@ export const PORTRAIT = {
   alt: 'A mountain ridge rising above a sea of cloud at sunset',
 }
 
-// Linked inline from the bio.
-export const COMPANIES: Record<string, string> = {
-  Alpaca: 'https://alpaca.markets',
-  Monoceros: 'https://monoceros.com',
-  'Clear Street': 'https://clearstreet.io',
+// Linked inline from the bio. Hovering or focusing one of these swaps the note
+// shown underneath.
+//
+// The `note` values below describe what each COMPANY does — they are not a
+// description of Vishesh's work there, because that isn't something this file
+// can know. Replace each one with a line about what you actually built or
+// owned; that's the whole point of the slot.
+export type Company = {
+  url: string
+  note: string
 }
+
+export const COMPANIES: Record<string, Company> = {
+  Alpaca: {
+    url: 'https://alpaca.markets',
+    note: 'Commission-free trading and brokerage APIs for developers.',
+  },
+  Monoceros: {
+    url: 'https://monoceros.com',
+    note: 'Quantitative trading, Toronto.',
+  },
+  'Clear Street': {
+    url: 'https://clearstreet.io',
+    note: 'Prime brokerage and clearing infrastructure, New York.',
+  },
+}
+
+/** Shown before anything has been hovered. */
+export const DEFAULT_COMPANY = 'Alpaca'
 
 export type IconName = 'linkedin' | 'github' | 'resume' | 'email'
 
