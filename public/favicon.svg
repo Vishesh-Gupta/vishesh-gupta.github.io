@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .glyph { fill: #14110f; }
+    @media (prefers-color-scheme: dark) {
+      .glyph { fill: #f4f1ed; }
+    }
+  </style>
+  <text
+    class="glyph"
+    x="32"
+    y="33"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="46"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >V</text>
+</svg>

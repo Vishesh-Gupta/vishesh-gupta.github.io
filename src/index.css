@@ -1,105 +1,117 @@
-/* Import fonts from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,400;0,6..72,500;1,6..72,200;1,6..72,400&family=Inter:wght@300;400;500&display=swap');
+/* Self-hosted so first paint doesn't wait on a third-party round trip. Both
+   are variable fonts covering the full weight range in one file, subset to
+   latin — the non-latin greetings fall through to system fonts, same as they
+   did when these were served from Google. */
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  /* Instanced to a single weight; the optical-size axis is kept. */
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/newsreader-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  transition: color 0.3s ease, background-color 0.3s ease;
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 :root {
-  --font-serif: 'Newsreader', Georgia, serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  
-  /* Theme variables */
-  --bg-color: #ffffff;
-  --text-color: #333;
-  --link-color: #333;
-  --hover-color: #000;
-  --bg-rgb: 255, 255, 255; /* Added for rgba calculations */
+
+  --bg: #ffffff;
+  --ink: #14110f;
+  --ink-soft: #6b6560;
+  --ink-faint: #d8d3cd;
+
+  --measure: 40rem;
+  --portrait: 8.5rem;
+
+  color-scheme: light dark;
 }
 
-/* Dark mode styles */
-:root.dark-mode {
-  --bg-color: #000000;
-  --text-color: #eee;
-  --link-color: #ddd;
-  --hover-color: #fff;
-  --bg-rgb: 0, 0, 0; /* Added for rgba calculations */
+/* Follows the OS setting; there is no manual toggle. The inked colours are a
+   touch off pure white so the large serif doesn't halate against the black. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --ink: #f4f1ed;
+    --ink-soft: #8d8880;
+    --ink-faint: #322e2a;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+p,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  line-height: 1.5;
-  font-size: 15.4px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition:
+    background-color 400ms ease,
+    color 400ms ease;
 }
 
-h1 {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: 2.063rem;
-  letter-spacing: -0.02em;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.bio {
-  font-family: var(--font-serif);
-  font-size: 0.963rem;
-  line-height: 1.7;
-  letter-spacing: -0.01em;
-  color: var(--text-color);
-}
-
-.timestamp {
-  font-family: var(--font-sans);
-  font-size: 0.825rem;
-  letter-spacing: 0.02em;
-  color: var(--text-color);
-}
-
-.nav-links a {
-  font-family: var(--font-serif);
-  font-size: 0.963rem;
-  letter-spacing: 0.01em;
-  color: var(--link-color);
-}
-
-.nav-links a:hover {
-  color: var(--hover-color);
-}
-
-.bio a {
-  color: var(--link-color);
-}
-
-.bio a:hover {
-  color: var(--hover-color);
-}
-
-/* Update greeting title style */
-.greeting-title {
-  font-family: var(--font-serif);
-  font-weight: 300;
-  font-size: 2.475rem;
-  letter-spacing: -0.03em;
-  color: var(--text-color);
-}
-
-/* Remove the dark mode styles */
-:root {
-  color-scheme: light;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 #root {
-  width: 100%;
   min-height: 100vh;
 }
 
-.app {
-  background-color: var(--bg-color);
-  transition: background-color 0.3s ease;
+@supports (min-height: 100svh) {
+  #root {
+    min-height: 100svh;
+  }
 }

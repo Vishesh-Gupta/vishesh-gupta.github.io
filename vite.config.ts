@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import preact from '@preact/preset-vite'
 
-// https://vite.dev/config/
+// The components are plain function components on useState/useEffect, so
+// preact/compat runs them unchanged — the preset aliases react and react-dom
+// onto it. See README for why.
 export default defineConfig({
-  plugins: [react()],
+  plugins: [preact()],
   base: '/',
 })

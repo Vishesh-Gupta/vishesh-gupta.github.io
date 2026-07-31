@@ -1,78 +1,364 @@
-.app {
-  background-color: white;
+/* ---------------------------------------------------------------------------
+   Layout — one fixed column on every route, so navigation never moves things.
+   --------------------------------------------------------------------------- */
+
+.page {
   min-height: 100vh;
-  padding: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4rem 1.5rem;
 }
 
-.main-content {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: left;
-  padding: 0 1rem;
+@supports (min-height: 100svh) {
+  .page {
+    min-height: 100svh;
+  }
 }
 
-.chinese-title {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
+.column {
+  width: 100%;
+  max-width: var(--measure);
 }
 
-.timestamp {
-  font-family: monospace;
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
+/* ---------------------------------------------------------------------------
+   Greeting — persistent across routes, fixed height, animated per character.
+   --------------------------------------------------------------------------- */
+
+.greeting {
+  margin-bottom: 2.5rem;
 }
 
-.bio {
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  max-width: 540px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.nav-links a {
-  color: #000;
-  text-decoration: none;
-}
-
-.nav-links a:hover {
-  text-decoration: underline;
-}
-
-.greeting-title {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  min-height: 4rem;
+.greeting-word {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 9vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  /* Reserved so swapping languages never nudges the page. Tall enough for
+     Devanagari, Japanese and Arabic glyphs, which sit outside a Latin line box. */
+  height: 1.3em;
   display: flex;
   align-items: center;
 }
 
-.cursor {
+.greeting-char {
   display: inline-block;
-  width: 3px;
-  height: 3rem;
-  background-color: #000;
-  margin-left: 5px;
-  animation: blink 1s infinite;
+  white-space: pre;
+  animation: char-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+.greeting-char.is-leaving {
+  animation: char-out 460ms cubic-bezier(0.55, 0, 0.75, 0) both;
 }
 
-.bio a {
-  color: #333;
-  text-decoration: none;
+@keyframes char-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.42em, 0);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
 }
 
-.bio a:hover {
-  text-decoration: underline;
+@keyframes char-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -0.34em, 0);
+    filter: blur(8px);
+  }
+}
+
+.greeting-language {
+  height: 1.6em;
+  margin-top: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.greeting-language span {
+  display: inline-block;
+  animation: label-in 900ms ease both;
+}
+
+.greeting-language span.is-leaving {
+  animation: label-out 420ms ease both;
+}
+
+@keyframes label-in {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes label-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Body — portrait column beside the prose.
+   --------------------------------------------------------------------------- */
+
+.body-grid {
+  display: grid;
+  grid-template-columns: var(--portrait) 1fr;
+  column-gap: 2.25rem;
+  align-items: start;
+}
+
+/* No photo file: collapse to the single column the page had before. */
+.body-grid.is-text-only {
+  grid-template-columns: 1fr;
+}
+
+.prose {
+  max-width: 30rem;
+}
+
+.portrait {
+  margin: 0;
+  animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: 80ms;
+}
+
+.portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Fixed ratio and an intrinsic size on the tag, so the text beside it never
+     reflows when the photo decodes. */
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: var(--ink-faint);
+  filter: grayscale(1);
+  transition: filter 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.portrait img:hover {
+  filter: grayscale(0);
+}
+
+/* ---------------------------------------------------------------------------
+   Bio.
+   --------------------------------------------------------------------------- */
+
+.bio-block {
+  animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: 120ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 1.1rem;
+}
+
+.eyebrow .dot {
+  margin: 0 0.35em;
+  color: var(--ink-faint);
+}
+
+.bio {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  letter-spacing: -0.006em;
+  text-wrap: pretty;
+}
+
+/* Company links sit inside prose, so they carry a standing underline that
+   firms up on hover rather than appearing from nothing. */
+.company {
+  position: relative;
+  white-space: nowrap;
+  box-shadow: inset 0 -1px 0 var(--ink-faint);
+  transition: box-shadow 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.company:hover,
+.company:focus-visible,
+.company.is-active {
+  box-shadow: inset 0 -1px 0 var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Per-company notes.
+   --------------------------------------------------------------------------- */
+
+.company-note,
+.company-notes {
+  margin-top: 1.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.775rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+}
+
+.company-note-label {
+  display: inline-block;
+  margin-right: 0.7em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Default: every note listed. Pointer devices trade this for the hover slot
+   below, so a device without hover never hides the content behind it. */
+.company-note {
+  display: none;
+}
+
+.company-notes li + li {
+  margin-top: 0.5rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .company-note {
+    display: block;
+    /* Exactly two lines held open (2 x 1.6 line-height), so swapping between
+       companies of different note lengths doesn't move the icons below. Keep
+       notes within two lines or raise this. */
+    min-height: 3.2em;
+  }
+
+  .company-notes {
+    display: none;
+  }
+}
+
+.company-note span {
+  animation: note-in 420ms ease both;
+}
+
+@keyframes note-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Elsewhere — icon row.
+   --------------------------------------------------------------------------- */
+
+.icons {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+
+.icon-link {
+  display: inline-flex;
+  color: var(--ink-soft);
+  /* Grows the tap target to ~40px without changing how the row looks. */
+  padding: 0.625rem;
+  margin: -0.625rem;
+  animation: rise 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transition:
+    color 280ms ease,
+    transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.icon-link:hover,
+.icon-link:focus-visible {
+  color: var(--ink);
+  transform: translate3d(0, -2px, 0);
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .body-grid {
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+  }
+
+  .portrait {
+    width: var(--portrait);
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 3rem 1.25rem;
+    align-items: flex-start;
+  }
+
+  .greeting {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .greeting-char,
+  .greeting-char.is-leaving,
+  .greeting-language span,
+  .greeting-language span.is-leaving,
+  .bio-block,
+  .portrait,
+  .icon-link,
+  .company-note span {
+    animation: none !important;
+  }
+
+  .portrait img {
+    transition-duration: 1ms;
+  }
+
+  .icon-link {
+    transition-duration: 1ms;
+  }
+
+  .icon-link:hover,
+  .icon-link:focus-visible {
+    transform: none;
+  }
+
+  .company {
+    transition-duration: 1ms;
+  }
 }
