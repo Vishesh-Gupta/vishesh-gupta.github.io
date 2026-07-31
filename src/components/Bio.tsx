@@ -45,8 +45,8 @@ const Bio: FC = () => {
       <p className="bio">
         I&rsquo;m a senior software engineer working on the infrastructure under trading
         systems &mdash; clearing integrations, network interconnects, and the tooling
-        teams use to ship against them. Currently at {at('Alpaca')}; before that infra
-        lead at {at('Monoceros')}, and four years at {at('Clear Street')}. I studied
+        teams use to ship against them. Currently at {at('Alpaca')}; previously infra
+        lead at {at('Monoceros')}, and before that {at('Clear Street')}. I studied
         Computer Science at the University of Waterloo, with a minor in East Asian
         Studies. Mostly I care about systems that stay boring under load, and about
         turning manual, communication-heavy work into something self-serve. Usually

@@ -267,7 +267,7 @@
     /* Exactly two lines held open (2 x 1.6 line-height), so swapping between
        companies of different note lengths doesn't move the icons below. Keep
        notes within two lines or raise this. */
-    min-height: 4.9em;
+    min-height: 3.2em;
   }
 
   .company-notes {

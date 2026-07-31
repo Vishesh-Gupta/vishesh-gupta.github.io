@@ -17,8 +17,9 @@ export const PORTRAIT = {
 }
 
 // Linked inline from the bio. Hovering or focusing one swaps the detail shown
-// underneath. Keep `note` to roughly one line at the prose width — the slot
-// reserves a fixed height so the icons below it never move.
+// underneath. `note` describes the company rather than the work done there;
+// keep it to one line at the prose width, since the slot reserves a fixed
+// height so the icons below it never move.
 export type Company = {
   url: string
   where: string
@@ -28,18 +29,18 @@ export type Company = {
 export const COMPANIES: Record<string, Company> = {
   Alpaca: {
     url: 'https://alpaca.markets',
-    where: 'Globally remote · 2025 –',
-    note: 'Self-clearing integration, network interconnect architecture, and Terraform modules for auto-clustered regions.',
+    where: 'Globally remote',
+    note: 'Commission-free trading and brokerage APIs for developers.',
   },
   Monoceros: {
     url: 'https://monoceros.com',
-    where: 'Cayman Islands · 2024 – 25',
-    note: 'Infra lead: built and ran the software and hardware carrying market data for four teams.',
+    where: 'Cayman Islands',
+    note: 'Quantitative trading.',
   },
   'Clear Street': {
     url: 'https://clearstreet.io',
-    where: 'New York · 2021 – 24',
-    note: 'Vault, Teleport and Buf integrations, plus IaC tooling that cut access-request overhead by 40%.',
+    where: 'New York',
+    note: 'Prime brokerage and clearing infrastructure.',
   },
 }
 

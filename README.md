@@ -15,9 +15,37 @@ bio with the companies linked inline, and a row of icon links.
 - **Icons** — [`src/components/Icons.tsx`](src/components/Icons.tsx). Adding an
   entry to `ELSEWHERE` needs a matching key here and in `IconName`.
 
-The résumé is `public/resume.pdf`, linked from the last icon. Replacing that
-file is all a résumé update needs — but check `ROLE`, the bio prose, and the
-company notes still match it.
+The résumé is `public/resume.pdf`, linked from the last icon. **The published
+copy has the phone number stripped** — see below. When you update it, check
+`ROLE` and the bio prose still match.
+
+### Redacting a new résumé
+
+Never publish the original. Run it through the script first:
+
+```bash
+pip install pikepdf
+python tools/redact-resume.py ~/original.pdf public/resume.pdf
+grep -c 5931 public/resume.pdf   # expect 0
+```
+
+Drawing a black box over text does **not** redact a PDF — the text stays in
+the content stream and any reader pulls it straight back out. The script
+removes three separate things, and the third is the one that's easy to miss:
+
+1. the drawing operations for the phone line,
+2. the clickable `tel:` annotation, which carried the same number
+   independently of the visible text,
+3. the orphaned annotation object left in the file after that annotation is
+   unlinked from the page.
+
+Email, LinkedIn and GitHub are deliberately kept: all three are already
+published on this site, so removing them from the résumé would protect
+nothing.
+
+If the résumé's layout changes, the script's `PHONE_Y` baseline constant will
+need re-finding — it exits rather than writing a half-redacted file if it
+matches nothing.
 
 ## Company notes
 
@@ -26,14 +54,13 @@ single reserved line under the bio and swaps as you hover or tab across the
 company names; on touch, where there's no hover to reveal it, all three are
 listed instead.
 
-Each entry carries a `where` (location and dates) and a `note` (what the work
-was). Both are drawn from the résumé in `public/resume.pdf` — keep them in
-step when that changes.
+Each entry carries a `where` (location) and a `note` describing **what the
+company does** — not the work done there, and no dates.
 
-Keep each note within two lines at the prose width. The slot reserves three
-lines total — one for `where`, two for `note` — and that reserve is what stops
-the icons below from moving when the detail swaps. Longer notes need
-`.company-note`'s `min-height` raised in `src/App.css` to match.
+Keep each note to one line at the prose width. The slot reserves two lines
+total, and that reserve is what stops the icons below from moving when the
+detail swaps. Longer notes need `.company-note`'s `min-height` raised in
+`src/App.css` to match.
 
 ## The photo
 
