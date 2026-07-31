@@ -13,11 +13,12 @@ export const RESUME_URL = '/resume.pdf'
 // Unsplash License permits use without attribution, so nothing else has to
 // change when you swap it.
 //
-// The image is cropped to 4:5 and rendered 136px wide, so roughly 544x680
-// covers a 2x screen. If the file is missing entirely, the portrait column
-// removes itself rather than showing a broken image.
+// Rendered 136px wide in a 4:5 crop, so the two files are 272x340 and 408x510
+// — the browser picks one, it never loads both. If they're missing entirely the
+// portrait column removes itself rather than showing a broken image.
 export const PORTRAIT = {
-  src: '/portrait.jpg',
+  src: '/portrait@2x.webp',
+  srcSet: '/portrait@2x.webp 2x, /portrait@3x.webp 3x',
   alt: 'A mountain ridge rising above a sea of cloud at sunset',
 }
 

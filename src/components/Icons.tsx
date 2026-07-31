@@ -1,11 +1,11 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import type { IconName } from '../site'
 
 /**
  * Brand marks are drawn filled; the generic icons are stroked at a weight that
  * matches their optical density at 20px.
  */
-const paths: Record<IconName, JSX.Element> = {
+const paths: Record<IconName, ReactNode> = {
   linkedin: (
     <g fill="currentColor">
       <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM2.4 9.75h5.16V21H2.4V9.75Z" />

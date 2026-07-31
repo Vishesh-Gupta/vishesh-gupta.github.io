@@ -9,9 +9,10 @@ const Portrait: FC<{ onMissing: () => void }> = ({ onMissing }) => (
   <figure className="portrait">
     <img
       src={PORTRAIT.src}
+      srcSet={PORTRAIT.srcSet}
       alt={PORTRAIT.alt}
-      width="544"
-      height="680"
+      width="272"
+      height="340"
       decoding="async"
       onError={onMissing}
     />
