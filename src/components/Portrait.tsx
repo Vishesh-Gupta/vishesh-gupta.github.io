@@ -11,8 +11,8 @@ const Portrait: FC<{ onMissing: () => void }> = ({ onMissing }) => (
       src={PORTRAIT.src}
       srcSet={PORTRAIT.srcSet}
       alt={PORTRAIT.alt}
-      width="272"
-      height="340"
+      width="448"
+      height="774"
       decoding="async"
       onError={onMissing}
     />

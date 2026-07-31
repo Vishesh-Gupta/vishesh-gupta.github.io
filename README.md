@@ -15,8 +15,9 @@ bio with the companies linked inline, and a row of icon links.
 - **Icons** — [`src/components/Icons.tsx`](src/components/Icons.tsx). Adding an
   entry to `ELSEWHERE` needs a matching key here and in `IconName`.
 
-To wire up the résumé link, drop a PDF at `public/resume.pdf` (or point
-`RESUME_URL` at a hosted copy).
+The résumé is `public/resume.pdf`, linked from the last icon. Replacing that
+file is all a résumé update needs — but check `ROLE`, the bio prose, and the
+company notes still match it.
 
 ## Company notes
 
@@ -25,30 +26,35 @@ single reserved line under the bio and swaps as you hover or tab across the
 company names; on touch, where there's no hover to reveal it, all three are
 listed instead.
 
-**The notes currently describe what each company does, not what Vishesh did
-there.** Replace them with a line each about what you actually built or owned.
+Each entry carries a `where` (location and dates) and a `note` (what the work
+was). Both are drawn from the résumé in `public/resume.pdf` — keep them in
+step when that changes.
 
-Keep each note within two lines at the prose width — that's what the slot
-reserves, and it's what stops the icons below from moving when the note
-swaps. Longer notes need `.company-note`'s `min-height` raised in
-`src/App.css` to match.
+Keep each note within two lines at the prose width. The slot reserves three
+lines total — one for `where`, two for `note` — and that reserve is what stops
+the icons below from moving when the detail swaps. Longer notes need
+`.company-note`'s `min-height` raised in `src/App.css` to match.
 
 ## The photo
 
-**`public/portrait.jpg` is currently a placeholder** — a stock landscape from
-Unsplash, not a photo of Vishesh. Overwrite that file with a real one and
-update `PORTRAIT.alt` in `src/site.ts` to describe it. The Unsplash License
-allows use without attribution, so nothing else needs to change on the swap.
+Two files — `portrait@2x.webp` at **448×774** and `portrait@3x.webp` at
+**672×1161**. The browser fetches whichever matches the screen; it never loads
+both.
 
-It renders 136px wide in a 4:5 crop and ships as two files — `portrait@2x.webp`
-at **272×340** and `portrait@3x.webp` at **408×510**. The browser fetches
-whichever matches the screen; it never loads both. `object-fit: cover` handles
-the crop, so the source doesn't have to be 4:5 already — but it centres the
-crop, so centre the subject.
+On a pointer device the photo **stretches to the height of the text beside
+it**: the grid row is sized by the prose and the image fills it, so the two
+columns always finish level and the photo can never push the layout around as
+it decodes. That's why the files are ~0.58 aspect rather than 4:5 — it matches
+the rendered box, so `cover` neither upscales nor trims the sides. Below 640px
+the layout stacks and the photo takes a fixed 4:5 instead, since there's no
+text column to match.
 
-It sits desaturated and fades to full colour on hover. If the file isn't
-there, the portrait column removes itself and the page falls back to the
+It sits desaturated and fades to full colour on hover. If the files are
+missing, the portrait column removes itself and the page falls back to the
 single-column layout rather than showing a broken image.
+
+To swap the photo, regenerate both sizes from the same crop and update
+`PORTRAIT.alt` in `src/site.ts`.
 
 ## Social preview
 
@@ -108,11 +114,14 @@ Measured on the production build:
 | Total transferred | 380 kB | 139 kB |
 | JS (gzipped) | 48.7 kB | 10.5 kB |
 | Fonts | 180 kB | 92 kB |
-| Portrait | 52 kB | 19 kB (2x) |
+| Portrait | 52 kB | 65 kB (2x) |
 | Requests | 6 | 6 |
 | Build | ~770 ms | ~250 ms |
 
 Everything is same-origin — there are no third-party requests at all.
+
+The portrait grew when it went from a 136px thumbnail to a column-height
+photo; that's the one number that moved the wrong way, and deliberately.
 
 If you ever add a React-only dependency that reaches into internals, that's
 the point to reconsider the Preact alias; everything in `preact/compat` today

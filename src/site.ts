@@ -1,51 +1,45 @@
 // Single place to edit the content of the site.
 
 export const NAME = 'Vishesh Gupta'
-export const ROLE = 'Software Engineer'
+export const ROLE = 'Senior Software Engineer'
 
-// Drop a PDF at public/resume.pdf, or point this at a hosted copy.
 export const RESUME_URL = '/resume.pdf'
 
-// PLACEHOLDER. public/portrait.jpg is currently a stock landscape from
-// Unsplash, not a photo of Vishesh:
-// https://images.unsplash.com/photo-1506905925346-21bda4d32df4
-// Overwrite that file with a real photo and update `alt` to describe it. The
-// Unsplash License permits use without attribution, so nothing else has to
-// change when you swap it.
-//
-// Rendered 136px wide in a 4:5 crop, so the two files are 272x340 and 408x510
-// — the browser picks one, it never loads both. If they're missing entirely the
-// portrait column removes itself rather than showing a broken image.
+// Cropped 4:5 from the original and shipped at two densities — the browser
+// picks one, it never loads both. On a pointer device the image stretches to
+// the height of the text beside it, so framing matters more than the exact
+// ratio. If the files are missing the portrait column removes itself rather
+// than showing a broken image.
 export const PORTRAIT = {
   src: '/portrait@2x.webp',
   srcSet: '/portrait@2x.webp 2x, /portrait@3x.webp 3x',
-  alt: 'A mountain ridge rising above a sea of cloud at sunset',
+  alt: 'Vishesh Gupta sitting on a rock beside a misted koi pond',
 }
 
-// Linked inline from the bio. Hovering or focusing one of these swaps the note
-// shown underneath.
-//
-// The `note` values below describe what each COMPANY does — they are not a
-// description of Vishesh's work there, because that isn't something this file
-// can know. Replace each one with a line about what you actually built or
-// owned; that's the whole point of the slot.
+// Linked inline from the bio. Hovering or focusing one swaps the detail shown
+// underneath. Keep `note` to roughly one line at the prose width — the slot
+// reserves a fixed height so the icons below it never move.
 export type Company = {
   url: string
+  where: string
   note: string
 }
 
 export const COMPANIES: Record<string, Company> = {
   Alpaca: {
     url: 'https://alpaca.markets',
-    note: 'Commission-free trading and brokerage APIs for developers.',
+    where: 'Globally remote · 2025 –',
+    note: 'Self-clearing integration, network interconnect architecture, and Terraform modules for auto-clustered regions.',
   },
   Monoceros: {
     url: 'https://monoceros.com',
-    note: 'Quantitative trading, Toronto.',
+    where: 'Cayman Islands · 2024 – 25',
+    note: 'Infra lead: built and ran the software and hardware carrying market data for four teams.',
   },
   'Clear Street': {
     url: 'https://clearstreet.io',
-    note: 'Prime brokerage and clearing infrastructure, New York.',
+    where: 'New York · 2021 – 24',
+    note: 'Vault, Teleport and Buf integrations, plus IaC tooling that cut access-request overhead by 40%.',
   },
 }
 

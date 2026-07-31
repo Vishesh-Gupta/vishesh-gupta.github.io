@@ -34,8 +34,11 @@
   --ink-soft: #6b6560;
   --ink-faint: #d8d3cd;
 
-  --measure: 40rem;
-  --portrait: 8.5rem;
+  /* Wider than a reading measure on purpose — the bio sits in its own column
+     beside the portrait, and `--prose` is what actually caps line length. */
+  --measure: 53rem;
+  --prose: 36rem;
+  --portrait: 14rem;
 
   color-scheme: light dark;
 }
