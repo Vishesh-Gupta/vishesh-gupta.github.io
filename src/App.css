@@ -123,8 +123,10 @@
 .body-grid {
   display: grid;
   grid-template-columns: var(--portrait) 1fr;
-  column-gap: 2.25rem;
-  align-items: start;
+  column-gap: 2.5rem;
+  /* The row is sized by the text, and the photo stretches to fill it, so the
+     two columns finish level regardless of how the bio wraps. */
+  align-items: stretch;
 }
 
 /* No photo file: collapse to the single column the page had before. */
@@ -133,11 +135,12 @@
 }
 
 .prose {
-  max-width: 30rem;
+  max-width: var(--prose);
 }
 
 .portrait {
   margin: 0;
+  height: 100%;
   animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: 80ms;
 }
@@ -145,10 +148,9 @@
 .portrait img {
   display: block;
   width: 100%;
-  height: auto;
-  /* Fixed ratio and an intrinsic size on the tag, so the text beside it never
-     reflows when the photo decodes. */
-  aspect-ratio: 4 / 5;
+  /* Height comes from the text column, not the image, so the photo can never
+     push the layout around as it decodes. object-fit crops to whatever's left. */
+  height: 100%;
   object-fit: cover;
   border-radius: 4px;
   background-color: var(--ink-faint);
@@ -231,6 +233,15 @@
   color: var(--ink-soft);
 }
 
+.company-note-where {
+  color: var(--ink-soft);
+}
+
+.company-note-text {
+  display: block;
+  color: var(--ink-soft);
+}
+
 .company-note-label {
   display: inline-block;
   margin-right: 0.7em;
@@ -256,7 +267,7 @@
     /* Exactly two lines held open (2 x 1.6 line-height), so swapping between
        companies of different note lengths doesn't move the icons below. Keep
        notes within two lines or raise this. */
-    min-height: 3.2em;
+    min-height: 4.9em;
   }
 
   .company-notes {
@@ -319,6 +330,12 @@
 
   .portrait {
     width: var(--portrait);
+    height: auto;
+  }
+
+  .portrait img {
+    height: auto;
+    aspect-ratio: 4 / 5;
   }
 }
 
