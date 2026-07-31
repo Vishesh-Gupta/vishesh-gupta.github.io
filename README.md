@@ -156,4 +156,21 @@ pnpm lint
 pnpm preview  # serve the production build
 ```
 
-Deploys to GitHub Pages via `.github/workflows/deploy.yml` on push to `main`.
+`packageManager` in `package.json` pins pnpm, and CI installs with
+`--frozen-lockfile` — so if you change dependencies, commit the updated
+`pnpm-lock.yaml` or the deploy will fail.
+
+## Deployment
+
+Push to `main`. [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+builds and publishes `dist/` straight to Pages via `upload-pages-artifact` and
+`deploy-pages`. There's no `gh-pages` branch and nothing to publish by hand.
+
+This requires **Settings → Pages → Source: GitHub Actions**. With the source
+set to a branch instead, Pages serves the repo root — where `index.html` is
+the Vite dev shell pointing at `/src/main.tsx` — and the site renders blank.
+That is the first thing to check if it ever goes blank again.
+
+`pnpm build` runs `tsc` first, so a type error fails the deploy rather than
+shipping. Deploys are serialised and never cancelled mid-flight, and each one
+shows up under the repo's Environments tab with a rollback button.
