@@ -76,9 +76,9 @@ the rendered box, so `cover` neither upscales nor trims the sides. Below 640px
 the layout stacks and the photo takes a fixed 4:5 instead, since there's no
 text column to match.
 
-It sits desaturated and fades to full colour on hover. If the files are
-missing, the portrait column removes itself and the page falls back to the
-single-column layout rather than showing a broken image.
+It renders in full colour. If the files are missing, the portrait column
+removes itself and the page falls back to the single-column layout rather than
+showing a broken image.
 
 To swap the photo, regenerate both sizes from the same crop and update
 `PORTRAIT.alt` in `src/site.ts`.
