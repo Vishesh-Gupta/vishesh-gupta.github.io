@@ -5,10 +5,15 @@
   "type": "module",
   "homepage": "https://vishesh-gupta.github.io",
   "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "typecheck": "tsc -b",
     "lint": "eslint .",
+    "check": "pnpm typecheck && pnpm lint && pnpm vite build",
     "preview": "vite preview"
   },
   "dependencies": {

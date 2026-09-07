@@ -1,0 +1,67 @@
+name: CI
+
+# Runs on every pull request, which deploy.yml does not — it only fires after
+# a merge to main. Without this a PR that fails typecheck, lint or build merges
+# clean and the first sign of trouble is a red deploy, with the previous build
+# still live.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A new push to a PR makes the in-flight run redundant, so cancel it. (Unlike
+# the deploy workflow, where cancelling half-way could leave a partial deploy.)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Reads the pnpm version from package.json's packageManager field.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm vite build
+
+      # Catches the failure mode that actually bit this site: a build that
+      # succeeds but produces an index.html pointing at TypeScript source
+      # instead of a bundle.
+      - name: Verify the build output is a real bundle
+        run: |
+          set -euo pipefail
+          grep -q 'assets/index-.*\.js' dist/index.html \
+            || { echo "::error::dist/index.html has no bundled script tag"; exit 1; }
+          ! grep -q '/src/main.tsx' dist/index.html \
+            || { echo "::error::dist/index.html still references TypeScript source"; exit 1; }
+          test -s dist/resume.pdf
+          echo "dist/ looks correct"
+
+      # The published résumé must never carry the phone number again.
+      - name: Verify the résumé stays redacted
+        run: |
+          set -euo pipefail
+          if grep -qa 'tel:' dist/resume.pdf; then
+            echo "::error::dist/resume.pdf contains a tel: link — run tools/redact-resume.py"
+            exit 1
+          fi
+          echo "resume.pdf is redacted"
