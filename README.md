@@ -182,6 +182,33 @@ greeting in a script with taller glyphs, check `.greeting-word`'s `height` in
 
 The company-note slot works the same way — see above.
 
+## Dependencies
+
+Everything is on latest except TypeScript, which is deliberately held back.
+
+**TypeScript is pinned to `~6.0.3`, not 7.x.** `typescript-eslint` declares
+`typescript >=4.8.4 <6.1.0` and *hard-errors* on TS 7 rather than warning:
+
+```
+typescript-eslint does not support TS 7.0.
+```
+
+`tsc` itself is fine on 7 — it's linting that breaks — so bumping TypeScript
+makes `pnpm lint` fail outright, not degrade quietly. 6.0.3 is the newest
+release inside the supported range. Revisit when typescript-eslint ships TS 7
+support ([#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940)).
+
+`pnpm.overrides` forces `rollup` to the patched `^4.63.1` line. It arrives
+only as a transitive peer of `@preact/preset-vite`, which still resolves
+4.32.x; the override stays within the same major, so it's semver-safe.
+
+Check both at once:
+
+```bash
+pnpm outdated
+pnpm audit
+```
+
 ## Local development
 
 ```bash
