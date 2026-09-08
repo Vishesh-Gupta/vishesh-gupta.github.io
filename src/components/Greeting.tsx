@@ -24,11 +24,22 @@ const NBSP = ' '
 const Greeting: FC = () => {
   const [index, setIndex] = useState(0)
   const [leaving, setLeaving] = useState(false)
+  const [hidden, setHidden] = useState(() => document.hidden)
 
   useEffect(() => {
+    const onVisibilityChange = () => setHidden(document.hidden)
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [])
+
+  // Only the hold is gated on visibility, not the exit. Pausing mid-exit would
+  // freeze the word at zero opacity, so an in-flight cycle finishes and the
+  // next one simply never starts while the tab is in the background.
+  useEffect(() => {
+    if (hidden) return
     const timer = setTimeout(() => setLeaving(true), HOLD_MS)
     return () => clearTimeout(timer)
-  }, [index])
+  }, [index, hidden])
 
   useEffect(() => {
     if (!leaving) return

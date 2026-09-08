@@ -182,6 +182,63 @@ greeting in a script with taller glyphs, check `.greeting-word`'s `height` in
 
 The company-note slot works the same way — see above.
 
+## Dependencies
+
+Everything is on latest except TypeScript, which is deliberately held back.
+
+**TypeScript is pinned to `~6.0.3`, not 7.x.** `typescript-eslint` declares
+`typescript >=4.8.4 <6.1.0` and *hard-errors* on TS 7 rather than warning:
+
+```
+typescript-eslint does not support TS 7.0.
+```
+
+`tsc` itself is fine on 7 — it's linting that breaks — so bumping TypeScript
+makes `pnpm lint` fail outright, not degrade quietly. 6.0.3 is the newest
+release inside the supported range. Revisit when typescript-eslint ships TS 7
+support ([#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940)).
+
+`pnpm.overrides` forces `rollup` to the patched `^4.63.1` line. It arrives
+only as a transitive peer of `@preact/preset-vite`, which still resolves
+4.32.x; the override stays within the same major, so it's semver-safe.
+
+Check both at once:
+
+```bash
+pnpm outdated
+pnpm audit
+```
+
+### Dependabot
+
+[`.github/dependabot.yml`](.github/dependabot.yml) watches npm and GitHub
+Actions weekly, so this doesn't drift into a 52-advisory backlog again.
+
+Two things keep it from being a nuisance on a one-person repo:
+
+- **Grouped updates.** Routine minor/patch bumps arrive as one PR per
+  ecosystem rather than one per package. Majors stay ungrouped so they get
+  read individually.
+- **`open-pull-requests-limit`** caps it at 3 npm + 2 Actions PRs.
+
+It also **ignores TypeScript majors**, for the reason above: TS 7 doesn't
+degrade linting, it removes it, and without the ignore Dependabot would
+reopen that PR every week. Minor and patch TypeScript updates still come
+through. Delete that `ignore` entry once typescript-eslint supports TS 7.
+
+Every Dependabot PR is gated by `ci.yml`, which is what makes accepting them
+reasonable — a bump that breaks typecheck, lint, build, or the `dist/` shape
+can't merge green.
+
+Two caveats worth knowing:
+
+- Dependabot reads `pnpm-lock.yaml` under the `npm` ecosystem, but its pnpm
+  support has historically trailed new lockfile versions. If updates never
+  appear, check **Insights → Dependency graph → Dependabot** for a parse
+  error rather than assuming the config is wrong.
+- It doesn't reason about `pnpm.overrides`, so the pinned `rollup` line is
+  yours to maintain. `pnpm audit` is the check that would catch it lapsing.
+
 ## Local development
 
 ```bash

@@ -1,0 +1,55 @@
+version: 2
+
+updates:
+  # ── npm / pnpm ────────────────────────────────────────────────────────────
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: deps
+      prefix-development: deps-dev
+
+    # Grouping is what keeps this from being a nuisance on a one-person repo:
+    # routine minor/patch bumps arrive as a single PR instead of one per
+    # package. Majors are deliberately left ungrouped — those deserve to be
+    # read individually, as the TypeScript 7 upgrade showed.
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        update-types: [minor, patch]
+      production-dependencies:
+        dependency-type: production
+        update-types: [minor, patch]
+
+    ignore:
+      # TypeScript 7 does not "mostly work" here — it removes linting outright.
+      # typescript-eslint peers on `typescript >=4.8.4 <6.1.0` and hard-errors
+      # rather than warning, so `pnpm lint` exits 2. Without this, Dependabot
+      # would reopen that PR every week.
+      #
+      # Drop this entry once typescript-eslint ships TS 7 support:
+      # https://github.com/typescript-eslint/typescript-eslint/issues/10940
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
+  # ── GitHub Actions ────────────────────────────────────────────────────────
+  # The deploy and CI workflows pin actions by major tag; this keeps those
+  # current, which is the half of the supply chain that npm audit never sees.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: ci
+    groups:
+      github-actions:
+        patterns: ["*"]
