@@ -56,6 +56,27 @@ jobs:
           test -s dist/resume.pdf
           echo "dist/ looks correct"
 
+      # The analytics tag is generated, so it can drift from its config in two
+      # directions: a token set but no tag emitted (silent data loss — you'd
+      # think you had analytics and have none), or a tag emitted with no token
+      # configured. Assert both.
+      - name: Verify analytics wiring matches its config
+        run: |
+          set -euo pipefail
+          token=$(node -e "
+            const s = require('fs').readFileSync('vite.config.ts','utf8')
+            const m = s.match(/CF_BEACON_TOKEN = '([^']*)'/)
+            process.stdout.write(m ? m[1] : '')
+          ")
+          if grep -q cloudflareinsights dist/index.html; then present=yes; else present=no; fi
+          if [ -n "$token" ] && [ "$present" = no ]; then
+            echo "::error::a beacon token is configured but dist/index.html has no beacon"; exit 1
+          fi
+          if [ -z "$token" ] && [ "$present" = yes ]; then
+            echo "::error::dist/index.html has a beacon but no token is configured"; exit 1
+          fi
+          echo "analytics: token=$([ -n "$token" ] && echo configured || echo unset), beacon=$present"
+
       # The published résumé must never carry the phone number again.
       - name: Verify the résumé stays redacted
         run: |

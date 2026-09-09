@@ -145,7 +145,8 @@ Measured on the production build:
 | Requests | 6 | 6 |
 | Build | ~770 ms | ~250 ms |
 
-Everything is same-origin — there are no third-party requests at all.
+Every asset is same-origin. The only third-party request the site can make is
+the analytics beacon below, and only when a token is configured.
 
 The portrait grew when it went from a 136px thumbnail to a column-height
 photo; that's the one number that moved the wrong way, and deliberately.
@@ -153,6 +154,35 @@ photo; that's the one number that moved the wrong way, and deliberately.
 If you ever add a React-only dependency that reaches into internals, that's
 the point to reconsider the Preact alias; everything in `preact/compat` today
 covers what this site uses.
+
+## Analytics
+
+Cloudflare Web Analytics, wired up in
+[`vite.config.ts`](vite.config.ts). **It is off until you paste a token in:**
+
+```ts
+const CF_BEACON_TOKEN = ''   // <- paste yours here
+```
+
+Get one from dash.cloudflare.com → Analytics → Web Analytics → Add a site.
+The token is public by design — it ships in the page source of every site
+using it and grants nothing but "report a pageview" — so it belongs in this
+file, not in Actions secrets.
+
+Three things about how it's wired:
+
+- **Empty token emits nothing.** Not a broken script tag, not a request. The
+  built HTML is byte-identical to a build with analytics never added.
+- **`apply: 'build'` means it never runs during `pnpm dev`**, so browsing your
+  own site locally can't inflate the numbers. `vite preview` does include it,
+  since that serves a real production build.
+- **A blocked beacon can't break the page.** The tag is `defer`red and
+  external; verified with the request aborted outright — page renders, zero
+  console errors.
+
+No cookies, so no consent banner is required. CI asserts the wiring matches
+the config in both directions: a token with no emitted tag (silent data loss)
+and an emitted tag with no token both fail the build.
 
 ## Theming
 
