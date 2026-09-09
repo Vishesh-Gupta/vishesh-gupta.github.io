@@ -14,7 +14,7 @@ import preact from '@preact/preset-vite'
  * Leave it empty and no analytics tag is emitted at all — not a broken script
  * tag, not a request. The site works exactly as it does today.
  */
-const CF_BEACON_TOKEN = ''
+const CF_BEACON_TOKEN = '045ae6735a954525bc3ec675170fc620'
 
 /**
  * Injects the Cloudflare beacon into the built HTML.
@@ -36,7 +36,11 @@ function cloudflareAnalytics(token: string): Plugin {
             tag: 'script',
             injectTo: 'body',
             attrs: {
-              defer: true,
+              // type="module" matches the snippet Cloudflare hands out, and
+              // beacon.min.js is served as an ES module — loading it as a
+              // classic script with `defer` would risk a syntax error. Modules
+              // are deferred by default, so this is still non-blocking.
+              type: 'module',
               src: 'https://static.cloudflareinsights.com/beacon.min.js',
               'data-cf-beacon': JSON.stringify({ token }),
             },

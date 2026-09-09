@@ -145,8 +145,9 @@ Measured on the production build:
 | Requests | 6 | 6 |
 | Build | ~770 ms | ~250 ms |
 
-Every asset is same-origin. The only third-party request the site can make is
-the analytics beacon below, and only when a token is configured.
+Every asset is same-origin. The one third-party request is the Cloudflare
+analytics beacon (see below) — deferred, and incapable of blocking or
+breaking the page if it fails.
 
 The portrait grew when it went from a 136px thumbnail to a column-height
 photo; that's the one number that moved the wrong way, and deliberately.
@@ -157,28 +158,36 @@ covers what this site uses.
 
 ## Analytics
 
-Cloudflare Web Analytics, wired up in
-[`vite.config.ts`](vite.config.ts). **It is off until you paste a token in:**
+Cloudflare Web Analytics, live. The token lives in
+[`vite.config.ts`](vite.config.ts):
 
 ```ts
-const CF_BEACON_TOKEN = ''   // <- paste yours here
+const CF_BEACON_TOKEN = '045ae6735a954525bc3ec675170fc620'
 ```
 
-Get one from dash.cloudflare.com → Analytics → Web Analytics → Add a site.
-The token is public by design — it ships in the page source of every site
-using it and grants nothing but "report a pageview" — so it belongs in this
-file, not in Actions secrets.
+It is public by design — beacon tokens ship in the page source of every site
+using them and grant nothing but "report a pageview" — so it belongs in this
+file, not in Actions secrets. Replace it from dash.cloudflare.com → Analytics
+→ Web Analytics if you ever re-create the site there; set it to `''` to turn
+analytics off entirely.
 
-Three things about how it's wired:
+How it's wired:
 
-- **Empty token emits nothing.** Not a broken script tag, not a request. The
-  built HTML is byte-identical to a build with analytics never added.
+- **The tag is `type="module"`**, matching the snippet Cloudflare hands out.
+  `beacon.min.js` is served as an ES module, so loading it as a classic script
+  with `defer` would risk a syntax error. Modules defer by default, so it's
+  still non-blocking.
+- **Empty token emits nothing** — not a broken script tag, not a request. The
+  built HTML is then byte-identical to a build with analytics never added.
 - **`apply: 'build'` means it never runs during `pnpm dev`**, so browsing your
   own site locally can't inflate the numbers. `vite preview` does include it,
   since that serves a real production build.
-- **A blocked beacon can't break the page.** The tag is `defer`red and
-  external; verified with the request aborted outright — page renders, zero
-  console errors.
+- **A blocked beacon can't break the page.** Verified with the request aborted
+  outright, standing in for an ad blocker or Cloudflare being down — page
+  renders, zero console errors.
+
+Data shows up at dash.cloudflare.com → Analytics → Web Analytics, usually
+within a few minutes of the first visit.
 
 No cookies, so no consent banner is required. CI asserts the wiring matches
 the config in both directions: a token with no emitted tag (silent data loss)
