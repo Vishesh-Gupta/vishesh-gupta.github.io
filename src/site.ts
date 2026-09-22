@@ -1,7 +1,7 @@
 // Single place to edit the content of the site.
 
 export const NAME = 'Vishesh Gupta'
-export const ROLE = 'Senior Software Engineer'
+export const ROLE = 'Staff Software Engineer'
 
 export const RESUME_URL = '/resume.pdf'
 

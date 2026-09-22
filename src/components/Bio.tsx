@@ -43,7 +43,7 @@ const Bio: FC = () => {
       </p>
 
       <p className="bio">
-        I&rsquo;m a senior software engineer working on the infrastructure under trading
+        I&rsquo;m a staff software engineer working on the infrastructure under trading
         systems &mdash; clearing integrations, network interconnects, and the tooling
         teams use to ship against them. Currently at {at('Alpaca')}; previously infra
         lead at {at('Monoceros')}, and before that {at('Clear Street')}. I studied
