@@ -205,6 +205,13 @@ The palette is one block of custom properties at the top of `src/index.css`;
 nothing else in the CSS hardcodes a colour, so changing it means editing that
 block. `color-scheme: dark` keeps native controls and scrollbars in step.
 
+The depth comes from two soft pools of light fixed behind the page
+(`body::before` / `body::after`) that drift on slow, out-of-phase cycles —
+52s and 68s. They move with `transform` only, so the animation is composited
+and never triggers layout or a repaint of the page, and they are oversized
+and start offset so an edge can't drift into view. `prefers-reduced-motion`
+stops them; the light stays, it just holds still.
+
 The favicon still flips with `prefers-color-scheme`, and that is deliberate:
 it sits in the browser's tab bar, which follows the OS theme, not the page.
 A light tab bar wants the dark "V".
