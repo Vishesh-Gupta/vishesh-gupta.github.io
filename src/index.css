@@ -146,6 +146,20 @@ body::after {
   }
 }
 
+/* The contour map: iso-lines of a smooth scalar field, generated once by
+   tools/contours.py into public/contours.svg. Hairlines at low opacity, so
+   it reads as a surface under the page rather than a pattern on it; the
+   light pools above drift across it and bring different lines forward.
+   It is static - the maths is in the shape, not in motion. */
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url('/contours.svg') center / cover no-repeat;
+  opacity: 0.07;
+}
+
 a {
   color: inherit;
   text-decoration: none;
