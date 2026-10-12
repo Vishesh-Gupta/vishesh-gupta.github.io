@@ -212,17 +212,16 @@ and never triggers layout or a repaint of the page, and they are oversized
 and start offset so an edge can't drift into view. `prefers-reduced-motion`
 stops them; the light stays, it just holds still.
 
-Under the light is a contour map: the iso-lines of a smooth scalar field (a
-sum of a few sines), extracted with marching squares by
-[`tools/contours.py`](tools/contours.py) into `public/contours.svg`. It is
-generated once and shipped as a static asset, so the page pays nothing for
-it at runtime — hairlines at 7% opacity that the drifting light brings
-forward in different places. To change the field, edit the function at the
-top of the script and re-run it:
-
-```bash
-python3 tools/contours.py
-```
+Under the light is a contour map that moves: the iso-lines of a scalar
+field (a sum of a few sines) whose phases drift with time, so the map flows
+and reshapes like isobars on a weather chart. [`src/field.ts`](src/field.ts)
+samples the field on a ~16px grid and runs marching squares over it on a
+fixed canvas behind the page, at 30fps with the device pixel ratio capped —
+a fraction of a millisecond per frame. The loop stops entirely while the tab
+is hidden and resumes where it left off; under `prefers-reduced-motion` it
+draws one frame and holds. The lines are hairlines at 7% opacity, so the
+drifting light above brings different ones forward. To change the field,
+edit `field()` at the top of the file.
 
 The favicon still flips with `prefers-color-scheme`, and that is deliberate:
 it sits in the browser's tab bar, which follows the OS theme, not the page.
