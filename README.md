@@ -195,11 +195,19 @@ and an emitted tag with no token both fail the build.
 
 ## Theming
 
-Light and dark follow the OS setting via `prefers-color-scheme` — there's no
-toggle. Both schemes are defined as custom properties at the top of
-`src/index.css`; nothing else in the CSS hardcodes a colour, so changing the
-palette means editing those two blocks. The favicon and the `theme-color`
-meta tags switch with the scheme too.
+The site is dark only. It used to follow the OS setting via
+`prefers-color-scheme`, which meant a visitor on a light-mode machine — most
+of them — never saw the black at all; now everyone gets the same page, and it
+matches the LinkedIn banner. The background is `#03050a` rather than pure
+black, with a faint warm radial wash so it has some depth.
+
+The palette is one block of custom properties at the top of `src/index.css`;
+nothing else in the CSS hardcodes a colour, so changing it means editing that
+block. `color-scheme: dark` keeps native controls and scrollbars in step.
+
+The favicon still flips with `prefers-color-scheme`, and that is deliberate:
+it sits in the browser's tab bar, which follows the OS theme, not the page.
+A light tab bar wants the dark "V".
 
 ## Responsive behaviour
 

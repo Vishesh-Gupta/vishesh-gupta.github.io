@@ -15,9 +15,12 @@
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1200px; height: 630px; }
+      /* Same tokens as src/index.css — the card is the site, not a poster
+         for it. Keep the two in step when the palette changes. */
       body {
-        background: #ffffff;
-        color: #14110f;
+        background-color: #03050a;
+        background-image: radial-gradient(110% 120% at 20% 30%, #0f0e0d 0%, #07080b 48%, #03050a 100%);
+        color: #f4f1ed;
         font-family: 'Newsreader', Georgia, serif;
         display: flex;
         flex-direction: column;
@@ -33,7 +36,7 @@
       .rule {
         width: 64px;
         height: 1px;
-        background: #d8d3cd;
+        background: #322e2a;
         margin: 44px 0 40px;
       }
       .name {
@@ -42,10 +45,10 @@
         font-weight: 500;
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: #14110f;
+        color: #f4f1ed;
       }
-      .name .dot { color: #d8d3cd; margin: 0 0.5em; }
-      .name .role { color: #6b6560; }
+      .name .dot { color: #322e2a; margin: 0 0.5em; }
+      .name .role { color: #8d8880; }
       .foot {
         position: absolute;
         left: 96px;
@@ -53,7 +56,7 @@
         font-family: 'Inter', system-ui, sans-serif;
         font-size: 20px;
         letter-spacing: 0.06em;
-        color: #6b6560;
+        color: #8d8880;
       }
     </style>
   </head>

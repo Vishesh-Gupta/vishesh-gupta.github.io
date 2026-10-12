@@ -29,10 +29,15 @@
   --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
-  --bg: #ffffff;
-  --ink: #14110f;
-  --ink-soft: #6b6560;
-  --ink-faint: #d8d3cd;
+  /* Dark only. The site used to follow the OS setting and go white on a
+     light-mode machine, which meant most visitors never saw the black at all.
+     The background is a hair off pure black so it matches the LinkedIn
+     banner rather than reading as a void; the inked colours are a touch off
+     pure white so the large serif doesn't halate against it. */
+  --bg: #03050a;
+  --ink: #f4f1ed;
+  --ink-soft: #8d8880;
+  --ink-faint: #322e2a;
 
   /* Wider than a reading measure on purpose — the bio sits in its own column
      beside the portrait, and `--prose` is what actually caps line length. */
@@ -40,18 +45,7 @@
   --prose: 36rem;
   --portrait: 14rem;
 
-  color-scheme: light dark;
-}
-
-/* Follows the OS setting; there is no manual toggle. The inked colours are a
-   touch off pure white so the large serif doesn't halate against the black. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #000000;
-    --ink: #f4f1ed;
-    --ink-soft: #8d8880;
-    --ink-faint: #322e2a;
-  }
+  color-scheme: dark;
 }
 
 *,
@@ -79,7 +73,16 @@ html {
 }
 
 body {
-  background: var(--bg);
+  /* A faint warm wash toward the upper left, the same one the banner carries,
+     so the black has a little depth instead of being flat. It is subtle by
+     design: a few steps of lightness, nothing that reads as a shape. */
+  background-color: var(--bg);
+  background-image: radial-gradient(
+    110% 120% at 20% 30%,
+    #0f0e0d 0%,
+    #07080b 48%,
+    var(--bg) 100%
+  );
   color: var(--ink);
   font-family: var(--font-serif);
   font-size: 17px;
@@ -87,9 +90,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition:
-    background-color 400ms ease,
-    color 400ms ease;
 }
 
 a {
