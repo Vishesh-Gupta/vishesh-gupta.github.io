@@ -29,10 +29,15 @@
   --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
-  --bg: #ffffff;
-  --ink: #14110f;
-  --ink-soft: #6b6560;
-  --ink-faint: #d8d3cd;
+  /* Dark only. The site used to follow the OS setting and go white on a
+     light-mode machine, which meant most visitors never saw the black at all.
+     The background is a hair off pure black so it matches the LinkedIn
+     banner rather than reading as a void; the inked colours are a touch off
+     pure white so the large serif doesn't halate against it. */
+  --bg: #03050a;
+  --ink: #f4f1ed;
+  --ink-soft: #8d8880;
+  --ink-faint: #322e2a;
 
   /* Wider than a reading measure on purpose — the bio sits in its own column
      beside the portrait, and `--prose` is what actually caps line length. */
@@ -40,18 +45,7 @@
   --prose: 36rem;
   --portrait: 14rem;
 
-  color-scheme: light dark;
-}
-
-/* Follows the OS setting; there is no manual toggle. The inked colours are a
-   touch off pure white so the large serif doesn't halate against the black. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #000000;
-    --ink: #f4f1ed;
-    --ink-soft: #8d8880;
-    --ink-faint: #322e2a;
-  }
+  color-scheme: dark;
 }
 
 *,
@@ -79,7 +73,7 @@ html {
 }
 
 body {
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--ink);
   font-family: var(--font-serif);
   font-size: 17px;
@@ -87,9 +81,69 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition:
-    background-color 400ms ease,
-    color 400ms ease;
+}
+
+/* The background light: two soft warm pools, fixed behind the page, drifting
+   on slow out-of-phase cycles so the black has depth and the depth moves.
+   Deliberately faint — a few steps of lightness, nothing that reads as a
+   shape — and animated with transform only, so it never touches layout or
+   repaints the page. They are oversized and start offset so an edge can't
+   drift into view. */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+body::before {
+  width: 140vmax;
+  height: 140vmax;
+  left: -50vmax;
+  top: -70vmax;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 220, 180, 0.075) 0%,
+    rgba(255, 220, 180, 0.03) 45%,
+    transparent 72%
+  );
+  animation: drift-a 52s ease-in-out infinite alternate;
+}
+
+body::after {
+  width: 110vmax;
+  height: 110vmax;
+  right: -60vmax;
+  bottom: -70vmax;
+  background: radial-gradient(
+    closest-side,
+    rgba(180, 200, 255, 0.05) 0%,
+    rgba(180, 200, 255, 0.02) 45%,
+    transparent 72%
+  );
+  animation: drift-b 68s ease-in-out infinite alternate;
+}
+
+@keyframes drift-a {
+  from { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(6vw, 5vh, 0); }
+  to   { transform: translate3d(-4vw, 8vh, 0); }
+}
+
+@keyframes drift-b {
+  from { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(-7vw, -4vh, 0); }
+  to   { transform: translate3d(3vw, -9vh, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+  }
 }
 
 a {
