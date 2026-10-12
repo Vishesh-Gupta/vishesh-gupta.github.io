@@ -15,18 +15,27 @@ bio with the companies linked inline, and a row of icon links.
 - **Icons** — [`src/components/Icons.tsx`](src/components/Icons.tsx). Adding an
   entry to `ELSEWHERE` needs a matching key here and in `IconName`.
 
-The résumé is `public/resume.pdf`, linked from the last icon. **The published
-copy has the phone number stripped** — see below. When you update it, check
-`ROLE` and the bio prose still match.
+The résumé is `public/resume.pdf`, linked from the last icon. When you update
+it, check `ROLE` and the bio prose still match.
 
-### Redacting a new résumé
+### Keeping the phone number out
 
-Never publish the original. Run it through the script first:
+**The published copy must not carry a phone number.** The simplest way, and
+the current one, is to leave it out of the source document, so the export
+needs no treatment at all. Before committing a new export, check it anyway —
+CI runs the first of these on every build:
+
+```bash
+grep -c 'tel:' public/resume.pdf                 # expect 0: no clickable phone link
+pdftotext public/resume.pdf - | grep -E '[0-9]{3}[-. ][0-9]{3}[-. ][0-9]{4}'   # expect nothing
+```
+
+If an export ever brings the number back, do not publish it; run it through
+the redaction script first:
 
 ```bash
 pip install pikepdf
 python tools/redact-resume.py ~/original.pdf public/resume.pdf
-grep -c 5931 public/resume.pdf   # expect 0
 ```
 
 Drawing a black box over text does **not** redact a PDF — the text stays in
