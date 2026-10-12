@@ -146,6 +146,21 @@ body::after {
   }
 }
 
+/* The contour map: iso-lines of a slowly evolving scalar field, drawn by
+   src/field.ts. The canvas is sized by script to the viewport; here it is
+   only pinned behind the page and faded. Hairlines at low opacity, so it
+   reads as a surface under the page rather than a pattern on it; the light
+   pools above drift across it and bring different lines forward. */
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.07;
+}
+
 a {
   color: inherit;
   text-decoration: none;

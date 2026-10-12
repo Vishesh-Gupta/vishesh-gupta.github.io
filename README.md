@@ -15,18 +15,27 @@ bio with the companies linked inline, and a row of icon links.
 - **Icons** — [`src/components/Icons.tsx`](src/components/Icons.tsx). Adding an
   entry to `ELSEWHERE` needs a matching key here and in `IconName`.
 
-The résumé is `public/resume.pdf`, linked from the last icon. **The published
-copy has the phone number stripped** — see below. When you update it, check
-`ROLE` and the bio prose still match.
+The résumé is `public/resume.pdf`, linked from the last icon. When you update
+it, check `ROLE` and the bio prose still match.
 
-### Redacting a new résumé
+### Keeping the phone number out
 
-Never publish the original. Run it through the script first:
+**The published copy must not carry a phone number.** The simplest way, and
+the current one, is to leave it out of the source document, so the export
+needs no treatment at all. Before committing a new export, check it anyway —
+CI runs the first of these on every build:
+
+```bash
+grep -c 'tel:' public/resume.pdf                 # expect 0: no clickable phone link
+pdftotext public/resume.pdf - | grep -E '[0-9]{3}[-. ][0-9]{3}[-. ][0-9]{4}'   # expect nothing
+```
+
+If an export ever brings the number back, do not publish it; run it through
+the redaction script first:
 
 ```bash
 pip install pikepdf
 python tools/redact-resume.py ~/original.pdf public/resume.pdf
-grep -c 5931 public/resume.pdf   # expect 0
 ```
 
 Drawing a black box over text does **not** redact a PDF — the text stays in
@@ -211,6 +220,17 @@ The depth comes from two soft pools of light fixed behind the page
 and never triggers layout or a repaint of the page, and they are oversized
 and start offset so an edge can't drift into view. `prefers-reduced-motion`
 stops them; the light stays, it just holds still.
+
+Under the light is a contour map that moves: the iso-lines of a scalar
+field (a sum of a few sines) whose phases drift with time, so the map flows
+and reshapes like isobars on a weather chart. [`src/field.ts`](src/field.ts)
+samples the field on a ~16px grid and runs marching squares over it on a
+fixed canvas behind the page, at 30fps with the device pixel ratio capped —
+a fraction of a millisecond per frame. The loop stops entirely while the tab
+is hidden and resumes where it left off; under `prefers-reduced-motion` it
+draws one frame and holds. The lines are hairlines at 7% opacity, so the
+drifting light above brings different ones forward. To change the field,
+edit `field()` at the top of the file.
 
 The favicon still flips with `prefers-color-scheme`, and that is deliberate:
 it sits in the browser's tab bar, which follows the OS theme, not the page.
