@@ -111,6 +111,27 @@ rm dist/og-card.html
 The card pulls the same self-hosted fonts as the site, so it has to be
 rendered against a served build rather than opened from disk.
 
+## SEO
+
+The page is a Preact app, but it isn't served empty. A small plugin in
+`vite.config.ts` renders it to static HTML at build time and writes that into
+`dist/index.html`; in the browser, `main.tsx` hydrates that markup rather than
+rebuilding it. Crawlers and link-preview bots that don't run JavaScript —
+most of them, other than Google — see the name, bio and links directly. CI
+fails the build if `#root` ever ships empty again.
+
+`src/entry-server.tsx` is the build-time entry. It renders the app, and builds
+schema.org `Person` structured data — name, role, employer, school, profiles —
+from `src/site.ts`, so the data can't drift from what the page says. Check it
+with Google's [Rich Results Test](https://search.google.com/test/rich-results).
+
+`public/robots.txt` and `public/sitemap.xml` list the page and the résumé; the
+canonical URL is `https://vishesh-gupta.github.io/`.
+
+Anything that runs during render now runs at build time too, where there is no
+browser: guard `document` and `window` with `typeof`, and keep browser-only work
+inside effects.
+
 ## Fonts
 
 Newsreader and Inter are self-hosted from `public/fonts/` rather than fetched

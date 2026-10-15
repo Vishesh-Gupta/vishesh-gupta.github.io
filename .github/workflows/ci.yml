@@ -56,6 +56,22 @@ jobs:
           test -s dist/resume.pdf
           echo "dist/ looks correct"
 
+      # The page is prerendered at build time so search crawlers and link
+      # preview bots that don't run JavaScript see its content. If that
+      # silently stopped, the site would still work in a browser while search
+      # indexed an empty page - so assert it.
+      - name: Verify crawlers see the page without JavaScript
+        run: |
+          set -euo pipefail
+          grep -q '<div id="root"><' dist/index.html \
+            || { echo "::error::#root is empty: the prerender did not run"; exit 1; }
+          grep -q 'clearing integrations' dist/index.html \
+            || { echo "::error::the bio is missing from the prerendered HTML"; exit 1; }
+          grep -q 'application/ld+json' dist/index.html \
+            || { echo "::error::structured data is missing from dist/index.html"; exit 1; }
+          test -s dist/robots.txt && test -s dist/sitemap.xml
+          echo "prerendered, with structured data, robots.txt and sitemap.xml"
+
       # The analytics tag is generated, so it can drift from its config in two
       # directions: a token set but no tag emitted (silent data loss — you'd
       # think you had analytics and have none), or a tag emitted with no token
