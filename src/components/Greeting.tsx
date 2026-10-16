@@ -24,7 +24,8 @@ const NBSP = ' '
 const Greeting: FC = () => {
   const [index, setIndex] = useState(0)
   const [leaving, setLeaving] = useState(false)
-  const [hidden, setHidden] = useState(() => document.hidden)
+  // Prerendered at build time, where there is no document: assume visible.
+  const [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.hidden)
 
   useEffect(() => {
     const onVisibilityChange = () => setHidden(document.hidden)

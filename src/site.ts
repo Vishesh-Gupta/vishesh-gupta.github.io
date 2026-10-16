@@ -44,8 +44,16 @@ export const COMPANIES: Record<string, Company> = {
   },
 }
 
-/** Shown before anything has been hovered. */
+/**
+ * The current employer: shown before anything has been hovered, and named as
+ * `worksFor` in the page's structured data.
+ */
 export const DEFAULT_COMPANY = 'Alpaca'
+
+// For the structured data search engines read (src/entry-server.tsx): the
+// canonical origin for absolute URLs, and the school the bio mentions.
+export const SITE_URL = 'https://vishesh-gupta.github.io'
+export const SCHOOL = { name: 'University of Waterloo', url: 'https://uwaterloo.ca' }
 
 export type IconName = 'linkedin' | 'github' | 'resume' | 'email'
 
